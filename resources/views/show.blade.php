@@ -27,8 +27,9 @@
                 @endforeach
                 <form action="{{ route('comments.store', $post) }}" method="post">
                     @csrf
-                    <textarea name="body" required></textarea>
-                    <button type="submit">Comment</button>
+                    <div>penulis<input type="text" class="form-control" id="writer" name="writer" ></div>
+                    <div>isi<textarea name="body" required></textarea></div>
+                    <div><button type="submit">Comment</button></div>
                 </form>
             </div>
         </div>

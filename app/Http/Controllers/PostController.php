@@ -46,7 +46,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = posts::with('writer', 'comments', 'likes')->findOrFail($id);
+        $post = posts::with('comments')->findOrFail($id);
         return view('show', compact('post'));
     }
     public function edit($id)
@@ -56,29 +56,26 @@ class PostController extends Controller
     }
     public function update(Request $request, $id)
     {
+        // Validate the incoming request data
         $request->validate([
-            'title' => 'required',
-            'writer' => 'required',
-            'body' => 'required',
-            'image' => 'nullable|image',
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            // Add other fields you want to validate
         ]);
-    
+
+        // Find the post by ID
         $post = posts::findOrFail($id);
-        $post->title = $request->title;
-        $post->writer = $request->writer;
-        $post->body = $request->body;
-    
-        if ($request->hasFile('image')) {
-            // Delete the old image if exists
-            if ($post->image) {
-                Storage::delete($post->image);
-            }
-            $post->image = $request->file('image')->store('images');
-        }
-    
+
+        // Update the post with the new data
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        // Update other fields as needed
+
+        // Save the updated post
         $post->save();
-    
-        return redirect()->route('show', $post->id)->with('success', 'posts updated successfully.');
+
+        // Redirect back to the post details page with a success message
+        return redirect()->route('posts.show', $post->id)->with('success', 'Post updated successfully.');
     }
     public function destroy($id)
     {
@@ -91,7 +88,7 @@ class PostController extends Controller
     
         $post->delete();
     
-        return redirect()->route('index')->with('success', 'posts deleted successfully.');
+        return redirect()->route('posts.index')->with('success', 'posts deleted successfully.');
     }
     public function incrementLikes($id)
     {
@@ -99,6 +96,6 @@ class PostController extends Controller
         $post->likes = $post->likes + 1;
         $post->save();
 
-        return redirect()->route('show', $post)->with('success', 'Post liked successfully.');
+        return redirect()->route('posts.show', $post)->with('success', 'Post liked successfully.');
     }    
 }

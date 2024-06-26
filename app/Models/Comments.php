@@ -8,12 +8,10 @@ use app\Models\posts;
 class Comments extends Model
 {
     use HasFactory;
-    protected $fillable = ['writer','post_id', 'body'];
-
+    protected $fillable = ['post_id', 'user_id', 'body'];
 
     public function post()
     {
-        return $this->belongsTo(posts::class, 'post_id', 'post_id');
+        return $this->belongsTo(posts::class, 'post_id');
     }
-
 }

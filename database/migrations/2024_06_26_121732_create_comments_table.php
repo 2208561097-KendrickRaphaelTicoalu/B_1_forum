@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::dropIfExists('comments');
         Schema::create('comments', function (Blueprint $table) {
             $table->id('comment_id');
-            $table->foreignId('post_id')->references('post_id')->on('posts')->onDelete('cascade');
+            $table->foreignId('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->string('writer');
             $table->text('body');
             $table->timestamps();
